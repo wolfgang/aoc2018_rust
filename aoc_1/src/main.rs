@@ -9,7 +9,7 @@ fn main() -> io::Result<()> {
 
     let mut sum = 0;
     for line in f.lines() {
-    	let line = line.unwrap();
+        let line = line.unwrap();
         //println!("{}", line);
         let i = line.parse::<i32>().unwrap();
         //println!("{}", i);

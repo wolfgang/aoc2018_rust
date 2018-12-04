@@ -14,29 +14,29 @@ fn main() -> io::Result<()> {
     let f = BufReader::new(f);
 
     for line in f.lines() {
-    	let line = line.unwrap();
-    	let i = line.parse::<i32>().unwrap();
-    	offsets.push(i);
+        let line = line.unwrap();
+        let i = line.parse::<i32>().unwrap();
+        offsets.push(i);
     }
 
     let mut sum = 0;
-	let mut freqs = HashSet::new();
-	let mut dup_found = false;
-	let mut iterations = 0;
+    let mut freqs = HashSet::new();
+    let mut dup_found = false;
+    let mut iterations = 0;
 
-	while !dup_found {
-		iterations += 1;
-	    for i in &offsets {
-	        sum += i;
-	        if freqs.contains(&sum) {
-	        	dup_found = true;
-	        	println!("First dup: {} Iterations: {}", sum, iterations);
-	        	break;
-	        }
-	        freqs.insert(sum);	        
-	    }
+    while !dup_found {
+        iterations += 1;
+        for i in &offsets {
+            sum += i;
+            if freqs.contains(&sum) {
+                dup_found = true;
+                println!("First dup: {} Iterations: {}", sum, iterations);
+                break;
+            }
+            freqs.insert(sum);          
+        }
 
-	}
+    }
 
     Ok(())
 }
