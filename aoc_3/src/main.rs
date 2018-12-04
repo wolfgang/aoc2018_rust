@@ -25,7 +25,6 @@ fn load_ids() -> Vec<String> {
     }
 
     return ids;
-
 }
 
 fn calculate_checksum(ids: &Vec<String>) -> i32 {
@@ -42,7 +41,6 @@ fn calculate_checksum(ids: &Vec<String>) -> i32 {
     }
 
     return count_with_two*count_with_three;
-
 }
 
 fn get_common_chars(ids: &Vec<String>) -> String {
@@ -79,24 +77,16 @@ fn contains_any_letter_times(wanted_count: i32, s: &String) -> bool {
         if *count == wanted_count {
             return true;
         }
-
     }
 
     return false;
 }
 
 fn num_diffs(s1: &String, s2: &String) -> i32 {
-    let mut diffs = 0;
-    for (i, c) in s1.chars().enumerate() {
-        if c != s2.chars().nth(i).unwrap() {
-            diffs += 1;
-        }
-    }
-    return diffs;
+    return (s1.len() - common_chars(s1, s2).len()) as i32;
 }
 
 fn common_chars(s1: &String, s2: &String) -> String {
-
     let mut result = String::from("");
     for (i, c) in s1.chars().enumerate() {
         if c == s2.chars().nth(i).unwrap() {
@@ -112,6 +102,20 @@ mod tests {
     use super::*;
 
     #[test]
+    fn contains_two_of_any_letter_() {
+        assert!(!contains_two_of_any_letter(&String::from("abc")));
+        assert!(contains_two_of_any_letter(&String::from("aac")));
+        assert!(contains_two_of_any_letter(&String::from("vinihorkulbfedcyzmsqgdxpau")));
+        assert!(!contains_two_of_any_letter(&String::from("abbbc")));
+    }
+
+    #[test]
+    fn contains_three_of_any_letter_() {
+        assert!(contains_three_of_any_letter(&String::from("abcdddxx")));
+        assert!(!contains_three_of_any_letter(&String::from("abcddddddxx")));
+    }
+
+        #[test]
     fn num_diffs_() {
         assert_eq!(0, num_diffs(&String::from("abc"), &String::from("abc")));
         assert_eq!(1, num_diffs(&String::from("abc"), &String::from("abd")));
@@ -124,38 +128,5 @@ mod tests {
         assert_eq!("ac", common_chars(&String::from("abc"), &String::from("axc")));
         assert_eq!("abcde", common_chars(&String::from("axbcde"), &String::from("aybcde")));
     }
-
-
-
-    #[test]
-    fn contains_two_of_any_letter_only_singles() {
-        assert!(!contains_two_of_any_letter(&String::from("abc")));
-    }
-
-    #[test]
-    fn contains_two_of_any_letter_exactly_2_of_one_letter() {
-        assert!(contains_two_of_any_letter(&String::from("aac")));
-    }
-
-    #[test]
-    fn contains_two_of_any_letter_exactly_2_of_more_letters() {
-        assert!(contains_two_of_any_letter(&String::from("vinihorkulbfedcyzmsqgdxpau")));
-    }
-
-    #[test]
-    fn contains_two_of_any_letter_exactly_more_than_2() {
-        assert!(!contains_two_of_any_letter(&String::from("abbbc")));
-    }
-
-    #[test]
-    fn contains_three_of_any_letter_exactly_3() {
-        assert!(contains_three_of_any_letter(&String::from("abcdddxx")));
-    }
-
-    #[test]
-    fn contains_three_of_any_letter_more_than_three() {
-        assert!(!contains_three_of_any_letter(&String::from("abcddddddxx")));
-    }
-
 
 }
