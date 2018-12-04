@@ -5,14 +5,34 @@ use std::fs::File;
 use std::collections::HashMap;
 
 fn main() -> io::Result<()> {
-	print_checksum();
-	println!("WELL");
+    print_checksum()?;
+    
+    let mut ids = vec![];
+
+    let f = File::open("input.txt")?;
+    let f = BufReader::new(f);
+
+    for line in f.lines() {
+        let line = line.unwrap();
+        ids.push(line);
+    }
+
+    for (i, id) in ids.iter().enumerate() {
+        for i2 in i+1 .. ids.len() {
+            if num_diffs(&id, &ids[i2]) == 1 {
+                println!("{}\n{}", id, ids[i2]);
+                println!("{}", common_chars(&id, &ids[i2]));
+            }
+        }
+    }
+
+    Ok(())
 
 
 }
 
 fn print_checksum() -> io::Result<()> {
-	let f = File::open("input.txt")?;
+    let f = File::open("input.txt")?;
     let f = BufReader::new(f);
 
     let mut count_with_two = 0;
@@ -20,10 +40,10 @@ fn print_checksum() -> io::Result<()> {
     for line in f.lines() {
         let line = line.unwrap();
         if contains_two_of_any_letter(&line) {
-        	count_with_two += 1
+            count_with_two += 1
         }
         if contains_three_of_any_letter(&line) {
-        	count_with_three += 1
+            count_with_three += 1
         }
     }
 
@@ -32,54 +52,73 @@ fn print_checksum() -> io::Result<()> {
 }
 
 fn contains_two_of_any_letter(s: &String) -> bool {
-	return contains_any_letter_times(2, s);
+    return contains_any_letter_times(2, s);
 }
 
 fn contains_three_of_any_letter(s: &String) -> bool {
-	return contains_any_letter_times(3, s);
+    return contains_any_letter_times(3, s);
 }
 
 fn contains_any_letter_times(wanted_count: i32, s: &String) -> bool {
-	let mut counts = HashMap::new();
-	for c in s.chars() { 
-		if !counts.contains_key(&c) {
-			counts.insert(c, 0);
-		}
-		let count = counts.get_mut(&c).unwrap();
-		*count += 1;
-	}
+    let mut counts = HashMap::new();
+    for c in s.chars() { 
+        if !counts.contains_key(&c) {
+            counts.insert(c, 0);
+        }
+        let count = counts.get_mut(&c).unwrap();
+        *count += 1;
+    }
     
     for (_, count) in &counts {
-    	if *count == wanted_count {
-    		return true;
-    	}
+        if *count == wanted_count {
+            return true;
+        }
 
     }
 
-	return false;
+    return false;
 }
 
 fn num_diffs(s1: &String, s2: &String) -> i32 {
-	let mut diffs = 0;
-	for (i, c) in s1.chars().enumerate() {
-    	if c != s2.chars().nth(i).unwrap() {
-    		diffs += 1;
-    	}
+    let mut diffs = 0;
+    for (i, c) in s1.chars().enumerate() {
+        if c != s2.chars().nth(i).unwrap() {
+            diffs += 1;
+        }
+    }
+    return diffs;
 }
-	return diffs;
+
+fn common_chars(s1: &String, s2: &String) -> String {
+
+    let mut result = String::from("");
+    for (i, c) in s1.chars().enumerate() {
+        if c == s2.chars().nth(i).unwrap() {
+            result.push(c);
+        }
+    }
+    return result;
 }
 
 
 #[cfg(test)]
 mod tests {
-	use super::*;
+    use super::*;
 
-	#[test]
+    #[test]
     fn num_diffs_() {
-    	assert_eq!(0, num_diffs(&String::from("abc"), &String::from("abc")));
-    	assert_eq!(1, num_diffs(&String::from("abc"), &String::from("abd")));
-    	assert_eq!(2, num_diffs(&String::from("abcxy"), &String::from("abcab")));
+        assert_eq!(0, num_diffs(&String::from("abc"), &String::from("abc")));
+        assert_eq!(1, num_diffs(&String::from("abc"), &String::from("abd")));
+        assert_eq!(2, num_diffs(&String::from("abcxy"), &String::from("abcab")));
     }
+
+    #[test]
+    fn common_chars_() {
+        assert_eq!("", common_chars(&String::from("abc"), &String::from("edfg")));
+        assert_eq!("ac", common_chars(&String::from("abc"), &String::from("axc")));
+        assert_eq!("abcde", common_chars(&String::from("axbcde"), &String::from("aybcde")));
+    }
+
 
 
     #[test]
