@@ -6,8 +6,11 @@ use std::collections::HashMap;
 
 fn main()  {
     let ids = load_ids();
-    print_checksum(&ids);
-    print_common_chars(&ids);
+    let check_sum = calculate_checksum(&ids);
+    let common_chars = get_common_chars(&ids);
+
+    println!("Checksum: {}", check_sum);
+    println!("Common chars: {}", common_chars);
 }
 
 fn load_ids() -> Vec<String> {
@@ -25,7 +28,7 @@ fn load_ids() -> Vec<String> {
 
 }
 
-fn print_checksum(ids: &Vec<String>) {
+fn calculate_checksum(ids: &Vec<String>) -> i32 {
     let mut count_with_two = 0;
     let mut count_with_three = 0;
 
@@ -38,17 +41,20 @@ fn print_checksum(ids: &Vec<String>) {
         }
     }
 
-    println!("Checksum: {}", count_with_two*count_with_three);
+    return count_with_two*count_with_three;
+
 }
 
-fn print_common_chars(ids: &Vec<String>) {
+fn get_common_chars(ids: &Vec<String>) -> String {
     for (i, id) in ids.iter().enumerate() {
         for i2 in i+1 .. ids.len() {
             if num_diffs(&id, &ids[i2]) == 1 {
-                println!("Common chars: {}", common_chars(&id, &ids[i2]));
+                return common_chars(&id, &ids[i2]);
             }
         }
     }
+
+    return String::from("")
 }
 
 fn contains_two_of_any_letter(s: &String) -> bool {
