@@ -6,29 +6,7 @@ use std::collections::HashMap;
 
 fn main() -> io::Result<()> {
     print_checksum()?;
-    
-    let mut ids = vec![];
-
-    let f = File::open("input.txt")?;
-    let f = BufReader::new(f);
-
-    for line in f.lines() {
-        let line = line.unwrap();
-        ids.push(line);
-    }
-
-    for (i, id) in ids.iter().enumerate() {
-        for i2 in i+1 .. ids.len() {
-            if num_diffs(&id, &ids[i2]) == 1 {
-                println!("{}\n{}", id, ids[i2]);
-                println!("{}", common_chars(&id, &ids[i2]));
-            }
-        }
-    }
-
-    Ok(())
-
-
+    print_common_chars()
 }
 
 fn print_checksum() -> io::Result<()> {
@@ -49,6 +27,29 @@ fn print_checksum() -> io::Result<()> {
 
     println!("Checksum: {}", count_with_two*count_with_three);
     Ok(())
+}
+
+fn print_common_chars() -> io::Result<()> {
+    let mut ids = vec![];
+
+    let f = File::open("input.txt")?;
+    let f = BufReader::new(f);
+
+    for line in f.lines() {
+        let line = line.unwrap();
+        ids.push(line);
+    }
+
+    for (i, id) in ids.iter().enumerate() {
+        for i2 in i+1 .. ids.len() {
+            if num_diffs(&id, &ids[i2]) == 1 {
+                println!("Common chars: {}", common_chars(&id, &ids[i2]));
+            }
+        }
+    }
+
+    Ok(())
+
 }
 
 fn contains_two_of_any_letter(s: &String) -> bool {
