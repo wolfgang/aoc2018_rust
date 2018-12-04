@@ -5,7 +5,11 @@ use std::fs::File;
 use std::collections::HashMap;
 
 fn main() -> io::Result<()> {
-    let f = File::open("input.txt")?;
+	print_checksum()
+}
+
+fn print_checksum() -> io::Result<()> {
+	let f = File::open("input.txt")?;
     let f = BufReader::new(f);
 
     let mut count_with_two = 0;
@@ -21,8 +25,8 @@ fn main() -> io::Result<()> {
     }
 
     println!("Checksum: {}", count_with_two*count_with_three);
-
     Ok(())
+
 }
 
 fn contains_two_of_any_letter(s: &String) -> bool {
@@ -53,10 +57,28 @@ fn contains_any_letter_times(wanted_count: i32, s: &String) -> bool {
 	return false;
 }
 
+fn num_diffs(s1: &String, s2: &String) -> i32 {
+	let mut diffs = 0;
+	for (i, c) in s1.chars().enumerate() {
+    	if c != s2.chars().nth(i).unwrap() {
+    		diffs += 1;
+    	}
+}
+	return diffs;
+}
+
 
 #[cfg(test)]
 mod tests {
 	use super::*;
+
+	#[test]
+    fn num_diffs_() {
+    	assert_eq!(0, num_diffs(&String::from("abc"), &String::from("abc")));
+    	assert_eq!(1, num_diffs(&String::from("abc"), &String::from("abd")));
+    	assert_eq!(2, num_diffs(&String::from("abcxy"), &String::from("abcab")));
+    }
+
 
     #[test]
     fn contains_two_of_any_letter_only_singles() {
@@ -87,5 +109,6 @@ mod tests {
     fn contains_three_of_any_letter_more_than_three() {
         assert!(!contains_three_of_any_letter(&String::from("abcddddddxx")));
     }
+
 
 }
