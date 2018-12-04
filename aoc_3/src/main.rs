@@ -5,7 +5,10 @@ use std::fs::File;
 use std::collections::HashMap;
 
 fn main() -> io::Result<()> {
-	print_checksum()
+	print_checksum();
+	println!("WELL");
+
+
 }
 
 fn print_checksum() -> io::Result<()> {
@@ -26,7 +29,6 @@ fn print_checksum() -> io::Result<()> {
 
     println!("Checksum: {}", count_with_two*count_with_three);
     Ok(())
-
 }
 
 fn contains_two_of_any_letter(s: &String) -> bool {
