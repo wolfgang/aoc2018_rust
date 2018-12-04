@@ -1,38 +1,19 @@
-use std::io::{self, BufReader};
+use std::io::{BufReader};
 use std::io::prelude::*;
 use std::fs::File;
 
 use std::collections::HashMap;
 
-fn main() -> io::Result<()> {
-    print_checksum()?;
-    print_common_chars()
+fn main()  {
+    let ids = load_ids();
+    print_checksum(&ids);
+    print_common_chars(&ids);
 }
 
-fn print_checksum() -> io::Result<()> {
-    let f = File::open("input.txt")?;
-    let f = BufReader::new(f);
-
-    let mut count_with_two = 0;
-    let mut count_with_three = 0;
-    for line in f.lines() {
-        let line = line.unwrap();
-        if contains_two_of_any_letter(&line) {
-            count_with_two += 1
-        }
-        if contains_three_of_any_letter(&line) {
-            count_with_three += 1
-        }
-    }
-
-    println!("Checksum: {}", count_with_two*count_with_three);
-    Ok(())
-}
-
-fn print_common_chars() -> io::Result<()> {
+fn load_ids() -> Vec<String> {
     let mut ids = vec![];
 
-    let f = File::open("input.txt")?;
+    let f = File::open("input.txt").expect("Failed to open input.txt");
     let f = BufReader::new(f);
 
     for line in f.lines() {
@@ -40,6 +21,27 @@ fn print_common_chars() -> io::Result<()> {
         ids.push(line);
     }
 
+    return ids;
+
+}
+
+fn print_checksum(ids: &Vec<String>) {
+    let mut count_with_two = 0;
+    let mut count_with_three = 0;
+
+    for id in ids {
+        if contains_two_of_any_letter(&id) {
+            count_with_two += 1
+        }
+        if contains_three_of_any_letter(&id) {
+            count_with_three += 1
+        }
+    }
+
+    println!("Checksum: {}", count_with_two*count_with_three);
+}
+
+fn print_common_chars(ids: &Vec<String>) {
     for (i, id) in ids.iter().enumerate() {
         for i2 in i+1 .. ids.len() {
             if num_diffs(&id, &ids[i2]) == 1 {
@@ -47,9 +49,6 @@ fn print_common_chars() -> io::Result<()> {
             }
         }
     }
-
-    Ok(())
-
 }
 
 fn contains_two_of_any_letter(s: &String) -> bool {
