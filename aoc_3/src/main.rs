@@ -46,8 +46,9 @@ fn calculate_checksum(ids: &Vec<String>) -> i32 {
 fn get_common_chars(ids: &Vec<String>) -> String {
     for (i, id) in ids.iter().enumerate() {
         for i2 in i+1 .. ids.len() {
-            if num_diffs(&id, &ids[i2]) == 1 {
-                return common_chars(&id, &ids[i2]);
+            let common = common_chars(&id, &ids[i2]);
+            if common.len() == id.len() - 1 {
+                return common;
             }
         }
     }
@@ -82,10 +83,6 @@ fn contains_any_letter_times(wanted_count: i32, s: &String) -> bool {
     return false;
 }
 
-fn num_diffs(s1: &String, s2: &String) -> i32 {
-    return (s1.len() - common_chars(s1, s2).len()) as i32;
-}
-
 fn common_chars(s1: &String, s2: &String) -> String {
     let mut result = String::from("");
     for (i, c) in s1.chars().enumerate() {
@@ -113,13 +110,6 @@ mod tests {
     fn contains_three_of_any_letter_() {
         assert!(contains_three_of_any_letter(&String::from("abcdddxx")));
         assert!(!contains_three_of_any_letter(&String::from("abcddddddxx")));
-    }
-
-        #[test]
-    fn num_diffs_() {
-        assert_eq!(0, num_diffs(&String::from("abc"), &String::from("abc")));
-        assert_eq!(1, num_diffs(&String::from("abc"), &String::from("abd")));
-        assert_eq!(2, num_diffs(&String::from("abcxy"), &String::from("abcab")));
     }
 
     #[test]
