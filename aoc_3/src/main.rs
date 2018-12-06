@@ -5,8 +5,6 @@ use std::io::prelude::*;
 use std::fs::File;
 use regex::Regex;
 
-
-// Part1 answer: 121259
 fn main() {
     println!("Reading rects ..");
     let (rects, max_x, max_y) = read_rects();
@@ -16,8 +14,6 @@ fn main() {
 
     assert_eq!(121259, sum, "Wrong answer for part 1");
     println!("SUCCESS!");
-
-
 }
 
 fn read_rects() -> (Vec<Rect>, usize, usize) {
@@ -45,7 +41,6 @@ fn read_rects() -> (Vec<Rect>, usize, usize) {
     }
 
     (rects, max_x, max_y)
-
 }
 
 fn get_number_of_common_inches(rects: &Vec<Rect>, grid_width: usize, grid_height: usize) -> usize {
@@ -208,5 +203,4 @@ mod tests {
         assert_eq!(11, rect.width);
         assert_eq!(29, rect.height);
     }
-
 }
