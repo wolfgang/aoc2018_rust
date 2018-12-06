@@ -33,13 +33,8 @@ struct Rect {
     pub height: usize,
 }
 
-fn _rect_from(s: &String) -> Rect {
-    let rect_part = s.split("@").collect::<Vec<&str>>()[1].trim();
-
-    let split2 = rect_part.split(",").collect::<Vec<&str>>();
-    let x = split2[0].parse::<usize>().unwrap();
-
-    Rect {x: x, y: 0, width: 0, height: 0}
+fn rect_from(s: &String) -> Rect {
+    Rect {x: 0, y: 0, width: 0, height: 0}
 }
 
 #[cfg(test)]
@@ -85,7 +80,7 @@ mod tests {
 
 
     #[test]
-    fn parse_rect_from_string() {
+    fn parse_rect_spec_with_regex() {
         let rect_spec = "#1200 @ 94,536: 22x13";
 
         let re = Regex::new(r"^#\d+\s@\s(\d+),(\d+):\s(\d+)x(\d+)").unwrap();
@@ -95,5 +90,12 @@ mod tests {
         assert_eq!("536", caps.get(2).unwrap().as_str());
         assert_eq!("22", caps.get(3).unwrap().as_str());
         assert_eq!("13", caps.get(4).unwrap().as_str());
+    }
+
+    #[test]
+    fn rect_from() {
+        let rect_spec = String::from("#128 @ 871,217: 11x29");
+        let rect = rect_from(&rect_spec);
+        assert_eq!(871, rect.x);
     }
 }
