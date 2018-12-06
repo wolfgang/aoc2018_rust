@@ -1,3 +1,7 @@
+extern crate regex;
+
+use regex::Regex;
+
 fn main() {
     println!("Hello, world!");
 }
@@ -29,10 +33,13 @@ struct Rect {
     pub height: usize,
 }
 
-fn rect_from(_s: &String) -> Rect {
-    // let rect_part = s.split("@").collect()[0];
+fn rect_from(s: &String) -> Rect {
+    let rect_part = s.split("@").collect::<Vec<&str>>()[1].trim();
 
-    Rect {x: 0, y: 0, width: 0, height: 0}
+    let split2 = rect_part.split(",").collect::<Vec<&str>>();
+    let x = split2[0].parse::<usize>().unwrap();
+
+    Rect {x: x, y: 0, width: 0, height: 0}
 }
 
 #[cfg(test)]
@@ -64,17 +71,28 @@ mod tests {
         assert_eq!("94,536: 22x13", split[1].trim());
     }
 
+    #[test]
+    fn regex() {
+        let re = Regex::new(r"^\d{4}-\d{2}-\d{2}$").unwrap();
+        assert!(re.is_match("2014-01-01"));
+
+        let re = Regex::new(r"[a-z]+(?:([0-9]+)|([A-Z]+))").unwrap();
+        let caps = re.captures("abc123").unwrap();
+
+        let text1 = caps.get(1).unwrap().as_str();
+        assert_eq!(text1, "123");
+    }
+
 
     #[test]
-    #[ignore]
     fn parse_rect_from_string() {
         let s1 = String::from("#1200 @ 94,536: 22x13");
         let parsed_rect = rect_from(&s1);
 
         assert_eq!(94, parsed_rect.x);
-        assert_eq!(536, parsed_rect.y);
-        assert_eq!(22, parsed_rect.width);
-        assert_eq!(13, parsed_rect.height);
+        // assert_eq!(536, parsed_rect.y);
+        // assert_eq!(22, parsed_rect.width);
+        // assert_eq!(13, parsed_rect.height);
 
     }
 }
