@@ -5,7 +5,22 @@ use std::io::prelude::*;
 use std::fs::File;
 use regex::Regex;
 
+
+// Part1 answer: 121259
 fn main() {
+    println!("Reading rects ..");
+    let (rects, max_x, max_y) = read_rects();
+
+    println!("Calculating answer for part 1 ..");
+    let sum = get_number_of_common_inches(&rects, max_x, max_y);
+
+    println!("{}", sum);
+    assert_eq!(121259, sum, "Wrong answer for part 1");
+
+
+}
+
+fn read_rects() -> (Vec<Rect>, usize, usize) {
     let mut rects = vec![];
 
     let mut max_x = 0;
@@ -25,14 +40,17 @@ fn main() {
         if &rect.y + &rect.height > max_y {
             max_y = &rect.y + &rect.height;
         }
-        println!("{} {} : {} {}", rect.x, rect.y, rect.width, rect.height);
         rects.push(rect);
 
     }
 
-    println!("{} {}", max_x, max_y);
+    (rects, max_x, max_y)
 
-    let mut grid = Grid::new(max_x, max_y);
+}
+
+fn get_number_of_common_inches(rects: &Vec<Rect>, grid_width: usize, grid_height: usize) -> usize {
+
+    let mut grid = Grid::new(grid_width, grid_height);
     for rect in rects {
         grid.add_rect(&rect)
     }
@@ -46,11 +64,9 @@ fn main() {
             }
         }
     }
-
-    println!("{}", sum);
-
-
+    return sum;
 }
+
 
 struct Rect {
     pub x: usize,
