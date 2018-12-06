@@ -14,8 +14,8 @@ fn main() {
     println!("Calculating answer for part 1 ..");
     let sum = get_number_of_common_inches(&rects, max_x, max_y);
 
-    println!("{}", sum);
     assert_eq!(121259, sum, "Wrong answer for part 1");
+    println!("SUCCESS!");
 
 
 }
