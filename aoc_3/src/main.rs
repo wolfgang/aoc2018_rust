@@ -1,9 +1,55 @@
 extern crate regex;
 
+use std::io::{BufReader};
+use std::io::prelude::*;
+use std::fs::File;
 use regex::Regex;
 
 fn main() {
-    println!("Hello, world!");
+    let mut rects = vec![];
+
+    let mut max_x = 0;
+    let mut max_y = 0;
+
+
+    let f = File::open("input.txt").expect("Failed to open input.txt");
+    let f = BufReader::new(f);
+
+    for line in f.lines() {
+        let line = line.unwrap();
+        let rect = rect_from(&line);
+        if &rect.x + &rect.width > max_x {
+            max_x = &rect.x + &rect.width;
+        }
+
+        if &rect.y + &rect.height > max_y {
+            max_y = &rect.y + &rect.height;
+        }
+        println!("{} {} : {} {}", rect.x, rect.y, rect.width, rect.height);
+        rects.push(rect);
+
+    }
+
+    println!("{} {}", max_x, max_y);
+
+    let mut grid = Grid::new(max_x, max_y);
+    for rect in rects {
+        grid.add_rect(&rect)
+    }
+
+    let mut sum = 0;
+
+    for x in 0 .. grid.width {
+        for y in 0 .. grid.height {
+            if grid.get(x, y) == 2 {
+                sum += 1;
+            }
+        }
+    }
+
+    println!("{}", sum);
+
+
 }
 
 struct Rect {
