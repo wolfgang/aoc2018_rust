@@ -28,7 +28,7 @@ fn read_rects() -> (Vec<Rect>, usize, usize) {
 
     for line in f.lines() {
         let line = line.unwrap();
-        let rect = rect_from(&line);
+        let (_, rect) = rect_from(&line);
         if &rect.x + &rect.width > max_x {
             max_x = &rect.x + &rect.width;
         }
@@ -70,15 +70,16 @@ struct Rect {
     pub height: usize,
 }
 
-fn rect_from(rect_spec: &String) -> Rect {
-    let re = Regex::new(r"^#\d+\s@\s(\d+),(\d+):\s(\d+)x(\d+)").unwrap();
+fn rect_from(rect_spec: &String) -> (usize, Rect) {
+    let re = Regex::new(r"^#(\d+)\s@\s(\d+),(\d+):\s(\d+)x(\d+)").unwrap();
     let caps = re.captures(rect_spec).unwrap();
-    let x = caps.get(1).unwrap().as_str().parse::<usize>().unwrap();
-    let y = caps.get(2).unwrap().as_str().parse::<usize>().unwrap();
-    let width = caps.get(3).unwrap().as_str().parse::<usize>().unwrap();
-    let height = caps.get(4).unwrap().as_str().parse::<usize>().unwrap();
+    let id = caps.get(1).unwrap().as_str().parse::<usize>().unwrap();
+    let x = caps.get(2).unwrap().as_str().parse::<usize>().unwrap();
+    let y = caps.get(3).unwrap().as_str().parse::<usize>().unwrap();
+    let width = caps.get(4).unwrap().as_str().parse::<usize>().unwrap();
+    let height = caps.get(5).unwrap().as_str().parse::<usize>().unwrap();
 
-    Rect {x: x, y: y, width: width, height: height}
+    (id, Rect {x: x, y: y, width: width, height: height})
 }
 
 struct Grid {
@@ -197,7 +198,8 @@ mod tests {
     #[test]
     fn rect_from_parses_rect_from_string() {
         let rect_spec = String::from("#128 @ 871,217: 11x29");
-        let rect = rect_from(&rect_spec);
+        let (id, rect) = rect_from(&rect_spec);
+        assert_eq!(128, id);
         assert_eq!(871, rect.x);
         assert_eq!(217, rect.y);
         assert_eq!(11, rect.width);
