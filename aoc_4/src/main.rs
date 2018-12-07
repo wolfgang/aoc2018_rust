@@ -44,7 +44,12 @@ impl GuardRecord {
 
     pub fn was_asleep(&mut self, from_minute: i32, to_minute: i32) {
         self.minutes_asleep += to_minute - from_minute;
-        self.sleep_per_minute.insert(from_minute, 1);
+        if !self.sleep_per_minute.contains_key(&from_minute) {
+            self.sleep_per_minute.insert(from_minute, 0);
+        }
+
+        let count = self.sleep_per_minute.get_mut(&from_minute).unwrap();
+        *count += 1;
     }
 
     pub fn minute_most_asleep(&self) -> i32 {
@@ -100,8 +105,10 @@ mod tests {
     #[test]
     fn guard_record_minute_with_most_sleep() {
         let mut gr = GuardRecord::new(1234);
-        gr.was_asleep(10, 11);
+        gr.was_asleep(10, 12);
         assert_eq!(10, gr.minute_most_asleep());
+        gr.was_asleep(11, 13);
+        assert_eq!(11, gr.minute_most_asleep());
 
     }
 
