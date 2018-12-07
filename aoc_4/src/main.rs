@@ -92,6 +92,20 @@ fn parse_guard_from_entry(entry: &String) -> i32 {
     return -1;
 }
 
+fn is_sleep_entry(entry: &String) -> bool {
+  Regex::new(r"falls asleep$").unwrap().is_match(entry)
+}
+
+fn is_wakeup_entry(entry: &String) -> bool {
+  Regex::new(r"wakes up$").unwrap().is_match(entry)
+}
+
+fn parse_minutes_from_entry(entry: &String) -> i32 {
+    let re = Regex::new(r"\d{2}:(\d{2})").unwrap();
+    let caps = re.captures(entry).unwrap();
+    return caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
+}
+
  
 #[cfg(test)]
 #[macro_use]
@@ -138,6 +152,26 @@ mod tests {
         assert_eq!(-1, parse_guard_from_entry(&String::from("[1518-10-25 00:29] falls asleep")));
         assert_eq!(99, parse_guard_from_entry(&String::from("[1518-10-25 00:29] Guard #99 begins shift")));
         assert_eq!(1299, parse_guard_from_entry(&String::from("[1518-10-25 00:29] Guard #1299 begins shift")));
+    }
+
+    #[test]
+    fn is_sleep_entry_() {
+        assert!(is_sleep_entry(&String::from("[1518-10-25 00:29] falls asleep")));
+        assert!(!is_sleep_entry(&String::from("[1518-10-25 00:29] Guard #99 begins shift")));
+        assert!(!is_sleep_entry(&String::from("[1518-10-25 00:29] wakes up")));
+    }
+
+    #[test]
+    fn is_wakeup_entry_() {
+        assert!(is_wakeup_entry(&String::from("[1518-10-25 00:29] wakes up")));
+        assert!(!is_wakeup_entry(&String::from("[1518-10-25 00:29] falls asleep")));
+        assert!(!is_wakeup_entry(&String::from("[1518-10-25 00:29] Guard #99 begins shift")));
+    }
+
+    #[test]
+    fn parse_minutes_from_entry_() {
+        assert_eq!(29, parse_minutes_from_entry(&String::from("[1518-10-25 00:29] falls asleep")));
+        assert_eq!(5, parse_minutes_from_entry(&String::from("[1518-10-26 00:05] wakses up")));
     }
 
 
