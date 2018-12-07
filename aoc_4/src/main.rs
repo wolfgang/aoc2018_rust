@@ -109,7 +109,13 @@ mod tests {
         assert_eq!(10, gr.minute_most_asleep());
         gr.was_asleep(11, 13);
         assert_eq!(11, gr.minute_most_asleep());
+    }
 
+    #[test]
+    fn guard_record_minute_with_most_sleep_counts_range() {
+        let mut gr = GuardRecord::new(1234);
+        gr.was_asleep(10, 15);
+        assert_eq!(10, gr.minute_most_asleep());
     }
 
     #[test]
