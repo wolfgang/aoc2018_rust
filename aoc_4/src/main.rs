@@ -15,16 +15,17 @@ fn main() {
     println!("Hello, world!");
 }
 
-struct GuardCalculator {
+pub struct GuardFinder<'a> {
+    input : &'a Vec<String>
 
 }
 
-impl GuardCalculator {
-    pub fn new(input: &Vec<String>) -> GuardCalculator {
-        return GuardCalculator {};
+impl<'a> GuardFinder<'a> {
+    pub fn new(input: &'a Vec<String>) -> GuardFinder<'a> {
+        return GuardFinder { input: input};
     }
 
-    pub fn sleepiestGuard(&self) -> i32 {
+    pub fn sleepiest_guard(&self) -> i32 {
         return 0;
     }
 }
@@ -64,7 +65,7 @@ mod tests {
             String::from("[1518-11-05 00:55] wakes up")
         ];
 
-        let gc = GuardCalculator::new(&input);
-        assert_eq!(10*24, gc.sleepiestGuard());
+        let gc = GuardFinder::new(&input);
+        assert_eq!(10*24, gc.sleepiest_guard());
     }
 }
