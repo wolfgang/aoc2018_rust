@@ -16,7 +16,7 @@ fn main() {
     println!("SUCCESS!");
 }
 
-fn read_rects() -> (Vec<Rect>, usize, usize) {
+fn read_rects() -> (Vec<(usize, Rect)>, usize, usize) {
     let mut rects = vec![];
 
     let mut max_x = 0;
@@ -28,7 +28,7 @@ fn read_rects() -> (Vec<Rect>, usize, usize) {
 
     for line in f.lines() {
         let line = line.unwrap();
-        let (_, rect) = rect_from(&line);
+        let (id, rect) = rect_from(&line);
         if &rect.x + &rect.width > max_x {
             max_x = &rect.x + &rect.width;
         }
@@ -36,17 +36,17 @@ fn read_rects() -> (Vec<Rect>, usize, usize) {
         if &rect.y + &rect.height > max_y {
             max_y = &rect.y + &rect.height;
         }
-        rects.push(rect);
+        rects.push((id, rect));
 
     }
 
     (rects, max_x, max_y)
 }
 
-fn get_number_of_common_inches(rects: &Vec<Rect>, grid_width: usize, grid_height: usize) -> usize {
+fn get_number_of_common_inches(rects: &Vec<(usize, Rect)>, grid_width: usize, grid_height: usize) -> usize {
 
     let mut grid = Grid::new(grid_width, grid_height);
-    for rect in rects {
+    for (_, rect) in rects {
         grid.add_rect(&rect)
     }
 
