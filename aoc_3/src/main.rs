@@ -13,8 +13,11 @@ fn main() {
 
     println!("Calculating answer for part 1 ..");
     let sum = get_number_of_common_inches(&grid);
+    println!("Calculating answer for part 2 ..");
+    let non_overlapping_id = get_non_overlapping_id(&rects, &grid);
 
     assert_eq!(121259, sum, "Wrong answer for part 1");
+    assert_eq!(239, non_overlapping_id, "Wrong answer for part 2");
 
     println!("SUCCESS!");
 }
@@ -57,7 +60,6 @@ fn create_grid(rects: &Vec<(usize, Rect)>, grid_width: usize, grid_height: usize
     return grid;
 }
 
-
 fn get_number_of_common_inches(grid: &Grid) -> usize {
     let mut sum = 0;
 
@@ -71,6 +73,14 @@ fn get_number_of_common_inches(grid: &Grid) -> usize {
     return sum;
 }
 
+fn get_non_overlapping_id(rects: &Vec<(usize, Rect)>, grid: &Grid) -> usize {
+    for (id, rect) in rects {
+        if !grid.has_rect_overlaps(&rect) {
+            return *id;
+        }
+    }
+    return 0;
+}
 
 struct Rect {
     pub x: usize,
