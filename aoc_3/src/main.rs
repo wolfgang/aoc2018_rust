@@ -9,10 +9,13 @@ fn main() {
     println!("Reading rects ..");
     let (rects, max_x, max_y) = read_rects();
 
+    let grid = create_grid(&rects, max_x, max_y);
+
     println!("Calculating answer for part 1 ..");
-    let sum = get_number_of_common_inches(&rects, max_x, max_y);
+    let sum = get_number_of_common_inches(&grid);
 
     assert_eq!(121259, sum, "Wrong answer for part 1");
+
     println!("SUCCESS!");
 }
 
@@ -43,13 +46,19 @@ fn read_rects() -> (Vec<(usize, Rect)>, usize, usize) {
     (rects, max_x, max_y)
 }
 
-fn get_number_of_common_inches(rects: &Vec<(usize, Rect)>, grid_width: usize, grid_height: usize) -> usize {
+
+fn create_grid(rects: &Vec<(usize, Rect)>, grid_width: usize, grid_height: usize) -> Grid {
 
     let mut grid = Grid::new(grid_width, grid_height);
     for (_, rect) in rects {
         grid.add_rect(&rect)
     }
 
+    return grid;
+}
+
+
+fn get_number_of_common_inches(grid: &Grid) -> usize {
     let mut sum = 0;
 
     for x in 0 .. grid.width {
