@@ -1,6 +1,16 @@
 extern crate regex;
 use regex::Regex;
 
+
+/* Part 1:
+- Create map day -> guard id
+- Create map day -> (guard id -> sleep/wake entries )
+- Parse above map to generate total minutes asleep
+    - sort sleep/awake entries by minute
+    - figure out minutes asleep per day
+    - sum up per guard
+*/
+
 fn main() {
     println!("Hello, world!");
 }
