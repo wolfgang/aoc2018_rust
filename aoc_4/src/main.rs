@@ -27,15 +27,6 @@ impl<'a> GuardFinder<'a> {
         return GuardFinder { input: input};
     }
 
-    pub fn days_to_guards(&self) -> HashMap<String, i32> {
-        let mut dtg = HashMap::new();
-        for entry in self.input {
-            let day = parse_day_from_entry(&entry);
-            dtg.insert(day, 99);
-        }
-        return dtg;
-    }
-
     pub fn sleepiest_guard(&self) -> i32 {
         return 0;
     }
@@ -72,19 +63,6 @@ mod tests {
         assert_eq!(-1, parse_guard_from_entry(&String::from("[1518-10-25 00:29] falls asleep")));
         assert_eq!(99, parse_guard_from_entry(&String::from("[1518-10-25 00:29] Guard #99 begins shift")));
         assert_eq!(1299, parse_guard_from_entry(&String::from("[1518-10-25 00:29] Guard #1299 begins shift")));
-    }
-
-    #[test]
-    fn guard_finder_days_to_guards() {
-        let input = part1_input();
-        let gc = GuardFinder::new(&input);
-
-        let days_to_guards = gc.days_to_guards();
-
-        assert_eq!(10, days_to_guards["1518-11-01"]);
-        assert_eq!(10, days_to_guards["1518-11-03"]);
-        assert_eq!(99, days_to_guards["1518-11-04"]);
-        assert_eq!(99, days_to_guards["1518-11-05"]);
     }
 
     #[test]
