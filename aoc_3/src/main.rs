@@ -111,6 +111,18 @@ impl Grid {
             }
         }
     }
+
+    pub fn has_rect_overlaps(&self, rect: &Rect) ->bool {
+        for x in rect.x .. rect.x + rect.width {
+            for y in rect.y .. rect.y + rect.height {
+                if  self.get(x, y) == 2 {
+                    return true
+                }
+            }
+        }
+
+        return false;
+    }
 }
 
 
@@ -170,6 +182,19 @@ mod tests {
         assert_eq!(2, grid.get(1, 0));
         assert_eq!(0, grid.get(0, 1));
         assert_eq!(0, grid.get(1, 1));
+    }
+
+    #[test]
+    fn has_rect_overlaps() {
+        let mut grid = Grid::new(2, 2);
+        let r1 = Rect {x: 0, y: 0, width: 2, height: 1};
+        assert!(!grid.has_rect_overlaps(&r1));
+        grid.add_rect(&r1);
+        assert!(!grid.has_rect_overlaps(&r1));
+        let r2 = Rect {x: 0, y: 0, width: 1, height: 1};
+        grid.add_rect(&r2);
+        assert!(grid.has_rect_overlaps(&r1));
+        assert!(grid.has_rect_overlaps(&r2));
     }
 
 
