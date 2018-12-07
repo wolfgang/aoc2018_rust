@@ -29,7 +29,6 @@ impl<'a> GuardFinder<'a> {
 
 pub struct GuardRecord {
     id: i32,
-    minutes_asleep: i32,
     sleep_per_minute: HashMap<i32, i32>,
 }
 
@@ -37,21 +36,23 @@ impl GuardRecord {
     pub fn new(id: i32) -> GuardRecord {
         return GuardRecord { 
             id: id, 
-            minutes_asleep: 0,
             sleep_per_minute: HashMap::new()
          };
     }
 
     pub fn was_asleep(&mut self, from_minute: i32, to_minute: i32) {
-        self.minutes_asleep += to_minute - from_minute;
         for m in from_minute .. to_minute {
-            if !self.sleep_per_minute.contains_key(&m) {
-                self.sleep_per_minute.insert(m, 0);
-            }
-
-            let count = self.sleep_per_minute.get_mut(&m).unwrap();
-            *count += 1;
+            self.increase_sleep_for_minute(m)
         }
+    }
+
+    pub fn minutes_asleep(&self) -> i32 {
+        let mut sum = 0;
+        for (_, sleep) in &self.sleep_per_minute {
+            sum += sleep;
+        }
+
+        return sum;
     }
 
     pub fn minute_most_asleep(&self) -> i32 {
@@ -66,6 +67,15 @@ impl GuardRecord {
             }
         }
         return max_minute;
+    }
+
+    fn increase_sleep_for_minute(&mut self, minute: i32) {
+        if !self.sleep_per_minute.contains_key(&minute) {
+            self.sleep_per_minute.insert(minute, 0);
+        }
+
+        let count = self.sleep_per_minute.get_mut(&minute).unwrap();
+        *count += 1;
     }
 }
 
@@ -90,7 +100,7 @@ mod tests {
     fn guard_record_after_initialization() {
         let gr1 = GuardRecord::new(1234);
         assert_eq!(1234, gr1.id);
-        assert_eq!(0, gr1.minutes_asleep);
+        assert_eq!(0, gr1.minutes_asleep());
         assert_eq!(-1, gr1.minute_most_asleep());
     }
 
@@ -98,9 +108,9 @@ mod tests {
     fn guard_accumulate_sleep_minutes() {
         let mut gr = GuardRecord::new(1234);
         gr.was_asleep(4, 7);
-        assert_eq!(3, gr.minutes_asleep);
+        assert_eq!(3, gr.minutes_asleep());
         gr.was_asleep(3, 10);
-        assert_eq!(10, gr.minutes_asleep);
+        assert_eq!(10, gr.minutes_asleep());
 
     }
 
