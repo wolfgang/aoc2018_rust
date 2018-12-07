@@ -29,7 +29,6 @@ impl<'a> GuardFinder<'a> {
 
     pub fn days_to_guards(&self) -> HashMap<String, i32> {
         let mut dtg = HashMap::new();
-        dtg.insert(String::from("1518-11-05"), 99);
         return dtg;
     }
 
