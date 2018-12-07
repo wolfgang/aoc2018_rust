@@ -1,6 +1,7 @@
 extern crate regex;
 use regex::Regex;
 
+use std::collections::HashMap;
 
 fn main() {
     println!("Hello, world!");
@@ -29,7 +30,7 @@ impl<'a> GuardFinder<'a> {
 pub struct GuardRecord {
     id: i32,
     minutes_asleep: i32,
-    minute_most_asleep: i32
+    sleep_per_minute: HashMap<i32, i32>,
 }
 
 impl GuardRecord {
@@ -37,12 +38,27 @@ impl GuardRecord {
         return GuardRecord { 
             id: id, 
             minutes_asleep: 0,
-             minute_most_asleep: -1 
+            sleep_per_minute: HashMap::new()
          };
     }
 
     pub fn was_asleep(&mut self, from_minute: i32, to_minute: i32) {
         self.minutes_asleep += to_minute - from_minute;
+        self.sleep_per_minute.insert(from_minute, 1);
+    }
+
+    pub fn minute_most_asleep(&self) -> i32 {
+        let mut max_minute = -1;
+        let mut max_sleep = -1;
+
+        for (minute, sleep) in &self.sleep_per_minute {
+            if *sleep > max_sleep {
+                max_sleep = *sleep;
+                max_minute = *minute;
+
+            }
+        }
+        return max_minute;
     }
 }
 
@@ -68,16 +84,24 @@ mod tests {
         let gr1 = GuardRecord::new(1234);
         assert_eq!(1234, gr1.id);
         assert_eq!(0, gr1.minutes_asleep);
-        assert_eq!(-1, gr1.minute_most_asleep);
+        assert_eq!(-1, gr1.minute_most_asleep());
     }
 
     #[test]
-    fn guard_record_record_sleep() {
+    fn guard_accumulate_sleep_minutes() {
         let mut gr = GuardRecord::new(1234);
         gr.was_asleep(4, 7);
         assert_eq!(3, gr.minutes_asleep);
         gr.was_asleep(3, 10);
         assert_eq!(10, gr.minutes_asleep);
+
+    }
+
+    #[test]
+    fn guard_record_minute_with_most_sleep() {
+        let mut gr = GuardRecord::new(1234);
+        gr.was_asleep(10, 11);
+        assert_eq!(10, gr.minute_most_asleep());
 
     }
 
