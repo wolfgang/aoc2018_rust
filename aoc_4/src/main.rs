@@ -40,6 +40,10 @@ impl GuardRecord {
              minute_most_asleep: -1 
          };
     }
+
+    pub fn was_asleep(&mut self, from_minute: i32, to_minute: i32) {
+        self.minutes_asleep += to_minute - from_minute;
+    }
 }
 
 fn parse_guard_from_entry(entry: &String) -> i32 {
@@ -65,6 +69,16 @@ mod tests {
         assert_eq!(1234, gr1.id);
         assert_eq!(0, gr1.minutes_asleep);
         assert_eq!(-1, gr1.minute_most_asleep);
+    }
+
+    #[test]
+    fn guard_record_record_sleep() {
+        let mut gr = GuardRecord::new(1234);
+        gr.was_asleep(4, 7);
+        assert_eq!(3, gr.minutes_asleep);
+        gr.was_asleep(3, 10);
+        assert_eq!(10, gr.minutes_asleep);
+
     }
 
     #[test]
