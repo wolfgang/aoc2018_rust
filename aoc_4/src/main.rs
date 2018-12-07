@@ -75,7 +75,6 @@ mod tests {
     }
 
     #[test]
-    #[ignore]
     fn guard_finder_days_to_guards() {
         let input = part1_input();
         let gc = GuardFinder::new(&input);
