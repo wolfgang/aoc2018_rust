@@ -1,3 +1,4 @@
+
 extern crate regex;
 
 use std::io::{BufReader};
@@ -146,6 +147,9 @@ impl Grid {
 
 
 #[cfg(test)]
+#[macro_use]
+extern crate pretty_assertions;
+
 mod tests {
     use super::*;
     #[test]
