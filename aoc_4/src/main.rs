@@ -56,19 +56,14 @@ impl GuardRecord {
     }
 
     pub fn minute_most_asleep(&self) -> i32 {
-        let mut max_minute = -1;
-        let mut max_sleep = -1;
-
         let mut max_entry = (-1, -1);
 
         for (minute, sleep) in &self.sleep_per_minute {
-            if *sleep > max_sleep {
-                max_sleep = *sleep;
-                max_minute = *minute;
-
+            if *sleep > max_entry.1 {
+                max_entry = (*minute, *sleep);
             }
         }
-        return max_minute;
+        return max_entry.0;
     }
 
     fn increase_sleep_for_minute(&mut self, minute: i32) {
