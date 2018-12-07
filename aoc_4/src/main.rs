@@ -59,6 +59,8 @@ impl GuardRecord {
         let mut max_minute = -1;
         let mut max_sleep = -1;
 
+        let mut max_entry = (-1, -1);
+
         for (minute, sleep) in &self.sleep_per_minute {
             if *sleep > max_sleep {
                 max_sleep = *sleep;
