@@ -29,6 +29,10 @@ impl<'a> GuardFinder<'a> {
 
     pub fn days_to_guards(&self) -> HashMap<String, i32> {
         let mut dtg = HashMap::new();
+        for entry in self.input {
+            let day = parse_day_from_entry(&entry);
+            dtg.insert(day, 99);
+        }
         return dtg;
     }
 
@@ -43,7 +47,15 @@ fn parse_day_from_entry(entry : &String) -> String {
     return caps.get(1).unwrap().as_str().into();
 }
 
-
+fn parse_guard_from_entry(entry: &String) -> i32 {
+    let re = Regex::new(r"Guard #(\d+)").unwrap();
+    if re.is_match(entry) {
+       let caps = re.captures(entry).unwrap();
+       return caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
+    }
+    return -1;
+}
+ 
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -56,15 +68,24 @@ mod tests {
     }
 
     #[test]
+    fn parse_guard_from_entry_() {
+        assert_eq!(-1, parse_guard_from_entry(&String::from("[1518-10-25 00:29] falls asleep")));
+        assert_eq!(99, parse_guard_from_entry(&String::from("[1518-10-25 00:29] Guard #99 begins shift")));
+        assert_eq!(1299, parse_guard_from_entry(&String::from("[1518-10-25 00:29] Guard #1299 begins shift")));
+    }
+
+    #[test]
+    #[ignore]
     fn guard_finder_days_to_guards() {
         let input = part1_input();
         let gc = GuardFinder::new(&input);
 
         let days_to_guards = gc.days_to_guards();
 
+        assert_eq!(10, days_to_guards["1518-11-01"]);
+        assert_eq!(10, days_to_guards["1518-11-03"]);
+        assert_eq!(99, days_to_guards["1518-11-04"]);
         assert_eq!(99, days_to_guards["1518-11-05"]);
-
-
     }
 
     #[test]
