@@ -27,12 +27,18 @@ impl<'a> GuardFinder<'a> {
 }
 
 pub struct GuardRecord {
-    id: i32
+    id: i32,
+    minutes_asleep: i32,
+    minute_most_asleep: i32
 }
 
 impl GuardRecord {
     pub fn new(id: i32) -> GuardRecord {
-        return GuardRecord { id: id };
+        return GuardRecord { 
+            id: id, 
+            minutes_asleep: 0,
+             minute_most_asleep: -1 
+         };
     }
 }
 
@@ -54,9 +60,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn guard_record() {
+    fn guard_record_after_initialization() {
         let gr1 = GuardRecord::new(1234);
         assert_eq!(1234, gr1.id);
+        assert_eq!(0, gr1.minutes_asleep);
+        assert_eq!(-1, gr1.minute_most_asleep);
     }
 
     #[test]
