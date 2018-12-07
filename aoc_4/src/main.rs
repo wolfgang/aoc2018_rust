@@ -7,13 +7,13 @@ fn main() {
 }
 
 pub struct GuardFinder<'a> {
-    input : &'a Vec<String>
+    _input : &'a Vec<String>
 
 }
 
 impl<'a> GuardFinder<'a> {
     pub fn new(input: &'a Vec<String>) -> GuardFinder<'a> {
-        return GuardFinder { input: input};
+        return GuardFinder { _input: input};
     }
 
     pub fn sleepiest_guard(&self) -> i32 {
@@ -23,6 +23,16 @@ impl<'a> GuardFinder<'a> {
         // waking up ? minutes asleep = minute - sleep minute
         // increase minutes hashmap since last sleep minute
         return 0;
+    }
+}
+
+pub struct GuardRecord {
+    id: i32
+}
+
+impl GuardRecord {
+    pub fn new(id: i32) -> GuardRecord {
+        return GuardRecord { id: id };
     }
 }
 
@@ -42,6 +52,12 @@ extern crate pretty_assertions;
 
 mod tests {
     use super::*;
+
+    #[test]
+    fn guard_record() {
+        let gr1 = GuardRecord::new(1234);
+        assert_eq!(1234, gr1.id);
+    }
 
     #[test]
     fn parse_guard_from_entry_() {
