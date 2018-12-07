@@ -62,7 +62,7 @@ mod tests {
 
         let days_to_guards = gc.days_to_guards();
 
-        // assert_eq!(99, days_to_guards["1518-11-05"]);
+        assert_eq!(99, days_to_guards["1518-11-05"]);
 
 
     }
