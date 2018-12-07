@@ -3,6 +3,13 @@ use regex::Regex;
 
 use std::collections::HashMap;
 
+// TODO
+// For each line of sorted input:
+//  If guard goes on duty, create new GuardRecord
+//  Record minutes asleep for current guard
+// Find guard record with most sleep minutes
+// Produce result -> guard id * minute most asleep 
+
 fn main() {
     println!("Hello, world!");
 }
