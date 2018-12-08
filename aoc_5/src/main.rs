@@ -7,22 +7,24 @@ fn main() {
 }
 
 fn react_polymer(polymer: &String) -> String {
-    let result = String::from("");
+    let mut result = String::from("");
 
     let mut i = 0;
+
     while i < polymer.len() {
-        if i>0 {
-            let prev_char = polymer.chars().nth(i-1).unwrap();
-            let current_char = polymer.chars().nth(i).unwrap();
-            if is_reacting(prev_char, current_char) {
-                return result;
+        let current_char = polymer.chars().nth(i).unwrap();
+        if i < polymer.len() - 1 {
+            let next_char = polymer.chars().nth(i+1).unwrap();
+            if is_reacting(current_char, next_char) {
+                i +=2;
+                continue;
             }
         }
+        result.push(current_char);
         i += 1;
-
     }
 
-    return polymer.clone();
+    return result;
 }
 
 fn is_reacting(c1: char, c2: char) -> bool {
@@ -39,6 +41,8 @@ mod tests {
         assert_eq!("aa", react_polymer(&String::from("aa")));
         assert_eq!("", react_polymer(&String::from("Aa")));
         assert_eq!("abcd", react_polymer(&String::from("abxXcd")));
+        assert_eq!("abcd", react_polymer(&String::from("abcdSs")));
+        assert_eq!("abcd", react_polymer(&String::from("Uuabcd")));
 
      }
 
