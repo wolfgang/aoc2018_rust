@@ -10,13 +10,6 @@ use std::io::prelude::*;
 use std::fs::File;
 use std::collections::HashMap;
 
-// TODO
-// For each line of sorted input:
-//  If guard goes on duty, create new GuardRecord
-//  Record minutes asleep for current guard
-// Find guard record with most sleep minutes
-// Produce result -> guard id * minute most asleep 
-
 fn main() {
     println!("Loading part 1 input ..");
     let mut input = load_input();
@@ -47,7 +40,6 @@ fn load_input() -> Vec<String> {
 
 pub struct GuardFinder<'a> {
     input : &'a Vec<String>
-
 }
 
 impl<'a> GuardFinder<'a> {
@@ -358,5 +350,4 @@ mod tests {
             String::from("[1518-11-05 00:55] wakes up")
         ]
     }
-
 }
