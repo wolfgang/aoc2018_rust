@@ -27,6 +27,10 @@ fn react_polymer(polymer: &String) -> String {
     return result;
 }
 
+fn char_at(index: usize, s: &String) -> char {
+    s.chars().nth(i).unwrap()
+}
+
 fn is_reacting(c1: char, c2: char) -> bool {
     return c1 != c2 && (c1.to_ascii_lowercase() == c2 || c1.to_ascii_uppercase() == c2);
 }
