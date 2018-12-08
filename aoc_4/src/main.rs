@@ -128,6 +128,13 @@ impl GuardRecord {
         return max_entry.0;
     }
 
+    pub fn sleep_at_minute(&self, minute: i32) -> i32 {
+        if !self.sleep_per_minute.contains_key(&minute) {
+            return 0;
+        }
+        return *self.sleep_per_minute.get(&minute).unwrap();
+    }
+
     fn increase_sleep_for_minute(&mut self, minute: i32) {
         if !self.sleep_per_minute.contains_key(&minute) {
             self.sleep_per_minute.insert(minute, 0);
@@ -215,6 +222,21 @@ mod tests {
         gr.was_asleep(30, 55);
         gr.was_asleep(24, 29);
         assert_eq!(24, gr.minute_most_asleep());
+    }
+
+    #[test]
+    fn guard_sleep_at_minute() {
+        let mut gr = GuardRecord::new(1234);
+        assert_eq!(0, gr.sleep_at_minute(11));
+        gr.was_asleep(11, 13);
+        assert_eq!(1, gr.sleep_at_minute(11));
+        assert_eq!(1, gr.sleep_at_minute(12));
+        assert_eq!(0, gr.sleep_at_minute(13));
+        gr.was_asleep(11, 14);
+        assert_eq!(2, gr.sleep_at_minute(11));
+        assert_eq!(2, gr.sleep_at_minute(12));
+        assert_eq!(1, gr.sleep_at_minute(13));
+
     }
 
     #[test]
