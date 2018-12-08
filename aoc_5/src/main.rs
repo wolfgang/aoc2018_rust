@@ -38,17 +38,13 @@ fn reduce_polymer(polymer: &String) -> String {
 
 fn react_polymer(polymer: &String) -> String {
     let mut result = String::with_capacity(polymer.len());
-
     let mut i = 0;
-
-    let bytes = polymer.as_bytes(); 
-
     while i < polymer.len() {
-        let current_char = bytes[i] as char;
+        let current_char = polymer.as_bytes()[i] as char;
         if i < polymer.len() - 1 {
-            let next_char = bytes[i+1] as char;
+            let next_char = polymer.as_bytes()[i+1] as char;
             if is_reacting(current_char, next_char) {
-                i +=2;
+                i += 2;
                 continue;
             }
         }
@@ -106,6 +102,4 @@ mod tests {
         assert_eq!('a', b[0] as char);
         assert_eq!('b', b[1] as char);
     }
-
-
 }
