@@ -6,6 +6,17 @@ fn main() {
     println!("Hello, world!");
 }
 
+fn reduce_polymer(polymer: &String) -> String {
+    let mut reduced = polymer.to_string();
+    let mut previous_length = polymer.len();
+    loop {
+        reduced = react_polymer(&reduced);
+        if reduced.len() == previous_length { break; }
+        previous_length = reduced.len();
+    }
+    return reduced;
+}
+
 fn react_polymer(polymer: &String) -> String {
     let mut result = String::from("");
 
@@ -47,6 +58,12 @@ mod tests {
         assert_eq!("abcd", react_polymer(&String::from("abxXcd")));
         assert_eq!("abcd", react_polymer(&String::from("abcdSs")));
         assert_eq!("abcd", react_polymer(&String::from("Uuabcd")));
+     }
+
+     #[test]
+     fn reduce_polymer_() {
+        let polymer = String::from("dabAcCaCBAcCcaDA");
+        assert_eq!("dabCBAcaDA", reduce_polymer(&polymer));
 
      }
 
