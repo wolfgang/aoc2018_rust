@@ -61,7 +61,7 @@ mod tests {
      }
 
      #[test]
-     fn reduce_polymer_() {
+     fn reduce_polymer() {
         let polymer = String::from("dabAcCaCBAcCcaDA");
         assert_eq!("dabCBAcaDA", reduce_polymer(&polymer));
 
