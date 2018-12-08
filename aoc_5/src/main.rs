@@ -9,13 +9,17 @@ fn main() {
 fn react_polymer(polymer: &String) -> String {
     let result = String::from("");
 
-    for (i, c) in polymer.char_indices() {
+    let mut i = 0;
+    while i < polymer.len() {
         if i>0 {
             let prev_char = polymer.chars().nth(i-1).unwrap();
-            if is_reacting(prev_char, c) {
+            let current_char = polymer.chars().nth(i).unwrap();
+            if is_reacting(prev_char, current_char) {
                 return result;
             }
         }
+        i += 1;
+
     }
 
     return polymer.clone();
@@ -34,13 +38,16 @@ mod tests {
         assert_eq!("", react_polymer(&String::from("aA")));
         assert_eq!("aa", react_polymer(&String::from("aa")));
         assert_eq!("", react_polymer(&String::from("Aa")));
+        //assert_eq!("abcd", react_polymer(&String::from("abxXcd")));
+
      }
 
     #[test]
-    fn indexing_strings() {
+    fn strings() {
         let s = String::from("abcd");
         assert_eq!('a', s.chars().nth(0).unwrap());
         assert_eq!('d', s.chars().nth(3).unwrap());
+        assert_eq!(2, "ab".len());
     }
 
     #[test]
