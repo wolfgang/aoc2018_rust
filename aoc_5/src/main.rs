@@ -12,9 +12,9 @@ fn react_polymer(polymer: &String) -> String {
     let mut i = 0;
 
     while i < polymer.len() {
-        let current_char = polymer.chars().nth(i).unwrap();
+        let current_char = char_at(i, polymer);
         if i < polymer.len() - 1 {
-            let next_char = polymer.chars().nth(i+1).unwrap();
+            let next_char = char_at(i+1, polymer);
             if is_reacting(current_char, next_char) {
                 i +=2;
                 continue;
@@ -28,7 +28,7 @@ fn react_polymer(polymer: &String) -> String {
 }
 
 fn char_at(index: usize, s: &String) -> char {
-    s.chars().nth(i).unwrap()
+    s.chars().nth(index).unwrap()
 }
 
 fn is_reacting(c1: char, c2: char) -> bool {
