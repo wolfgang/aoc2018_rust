@@ -53,6 +53,42 @@ impl<'a> GuardFinder<'a> {
     }
 
     pub fn sleepiest_guard(&self) -> i32 {        
+        let guard_records  = self.create_guard_records();
+
+        let mut sleepiest_guard = GuardRecord::new(-1);
+        for (_id, guard_record) in guard_records {
+            if guard_record.minutes_asleep() > sleepiest_guard.minutes_asleep() {
+                sleepiest_guard = guard_record;
+            }
+        }
+
+        return sleepiest_guard.id * sleepiest_guard.minute_most_asleep();
+    }
+
+    pub fn sleepiest_guard_for_minute(&self) -> i32 {
+        let guard_records  = self.create_guard_records();
+
+        let mut max_minutes = vec![];
+        for (id, guard_record) in guard_records {
+            let m = guard_record.minute_most_asleep();
+            let sleep = guard_record.sleep_at_minute(m);
+            max_minutes.push((id, m, sleep));
+        }
+
+        let mut max_result = (0, 0, 0);
+        for (guard_id, minute, sleep) in max_minutes {
+            let (_, _, max_sleep) = max_result;
+            if sleep > max_sleep {
+                max_result = (guard_id, minute, sleep);
+            }
+        }
+
+        let (max_guard, max_minute, _) = max_result;
+
+        return max_guard * max_minute;
+    }
+
+    fn create_guard_records(&self) -> HashMap<i32, GuardRecord> {
         let mut guard_records : HashMap<i32, GuardRecord> = HashMap::new();
         let mut current_guard_id = -1;
         let mut last_sleep_minute = -1;
@@ -78,59 +114,7 @@ impl<'a> GuardFinder<'a> {
             }
         }
 
-        let mut sleepiest_guard = GuardRecord::new(-1);
-        for (_id, guard_record) in guard_records {
-            if guard_record.minutes_asleep() > sleepiest_guard.minutes_asleep() {
-                sleepiest_guard = guard_record;
-            }
-        }
-
-        return sleepiest_guard.id * sleepiest_guard.minute_most_asleep();
-    }
-
-    pub fn sleepiest_guard_for_minute(&self) -> i32 {
-                let mut guard_records : HashMap<i32, GuardRecord> = HashMap::new();
-        let mut current_guard_id = -1;
-        let mut last_sleep_minute = -1;
-
-        for line in self.input {
-            let guard_id = parse_guard_from_entry(line);
-            if guard_id != -1 {
-                current_guard_id = guard_id;
-                if !guard_records.contains_key(&guard_id) {
-                    guard_records.insert(guard_id, GuardRecord::new(guard_id));
-                }
-            }
-
-            let current_guard_record = guard_records.get_mut(&current_guard_id).unwrap();
-
-            if is_sleep_entry(line) {
-                last_sleep_minute = parse_minutes_from_entry(line);
-            }
-
-            if is_wakeup_entry(line) {
-                let wakeup_minute = parse_minutes_from_entry(line);
-                current_guard_record.was_asleep(last_sleep_minute, wakeup_minute);
-            }
-        }
-
-        let mut max_minutes = vec![];
-        for (id, guard_record) in guard_records {
-            let m = guard_record.minute_most_asleep();
-            let sleep = guard_record.sleep_at_minute(m);
-            max_minutes.push((id, m, sleep));
-        }
-
-        let mut max_result = (-1, -1, -1);
-        for (id, minute, sleep) in max_minutes {
-            if sleep > max_result.2 {
-                max_result = (id, minute, sleep);
-            }
-        }
-
-        let (max_guard, max_minute, _) = max_result;
-
-        return max_guard * max_minute;
+        return guard_records;
     }
 }
 
