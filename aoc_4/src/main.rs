@@ -1,6 +1,13 @@
+#[cfg(test)]
+#[macro_use]
+extern crate pretty_assertions;
+
 extern crate regex;
 use regex::Regex;
 
+use std::io::{BufReader};
+use std::io::prelude::*;
+use std::fs::File;
 use std::collections::HashMap;
 
 // TODO
@@ -11,8 +18,29 @@ use std::collections::HashMap;
 // Produce result -> guard id * minute most asleep 
 
 fn main() {
-    println!("Hello, world!");
+    println!("Loading part 1 input ..");
+    let mut input = load_input();
+    input.sort();
+    println!("Calculating part 1 answer ..");
+    let gc = GuardFinder::new(&input);
+    assert_eq!(19025, gc.sleepiest_guard());
+    println!("SUCCESS!!");
+
 }
+
+fn load_input() -> Vec<String> {
+    let mut input = vec![];
+
+    let f = File::open("input.txt").expect("Failed to open input.txt");
+    let f = BufReader::new(f);
+
+    for line in f.lines() {
+        input.push(line.unwrap());
+    }
+
+    return input;
+}
+
 
 pub struct GuardFinder<'a> {
     input : &'a Vec<String>
@@ -135,9 +163,6 @@ fn parse_minutes_from_entry(entry: &String) -> i32 {
 
  
 #[cfg(test)]
-#[macro_use]
-extern crate pretty_assertions;
-
 mod tests {
     use super::*;
 
