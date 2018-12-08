@@ -25,17 +25,20 @@ impl<'a> GuardFinder<'a> {
     }
 
     pub fn sleepiest_guard(&self) -> i32 {        
-        let mut guard_records : Vec<GuardRecord> = Vec::new();
-        let mut current_guard_record = GuardRecord::new(-1);
+        let mut guard_records : HashMap<i32, GuardRecord> = HashMap::new();
+        let mut current_guard_id = -1;
         let mut last_sleep_minute = -1;
+
         for line in self.input {
             let guard_id = parse_guard_from_entry(line);
             if guard_id != -1 {
-                if current_guard_record.id != -1 {
-                    guard_records.push(current_guard_record);
+                current_guard_id = guard_id;
+                if !guard_records.contains_key(&guard_id) {
+                    guard_records.insert(guard_id, GuardRecord::new(guard_id));
                 }
-                current_guard_record = GuardRecord::new(guard_id);
             }
+
+            let current_guard_record = guard_records.get_mut(&current_guard_id).unwrap();
 
             if is_sleep_entry(line) {
                 last_sleep_minute = parse_minutes_from_entry(line);
@@ -45,18 +48,16 @@ impl<'a> GuardFinder<'a> {
                 let wakeup_minute = parse_minutes_from_entry(line);
                 current_guard_record.was_asleep(last_sleep_minute, wakeup_minute);
             }
-
         }
 
         let mut sleepiest_guard = GuardRecord::new(-1);
-        for guard_record in guard_records {
+        for (_id, guard_record) in guard_records {
             if guard_record.minutes_asleep() > sleepiest_guard.minutes_asleep() {
                 sleepiest_guard = guard_record;
             }
         }
 
-
-        return sleepiest_guard.id;// * sleepiest_guard.minute_most_asleep();
+        return sleepiest_guard.id * sleepiest_guard.minute_most_asleep();
     }
 }
 
@@ -141,7 +142,6 @@ mod tests {
     use super::*;
 
     #[test]
-    #[ignore]
     fn find_sleepiest_guard() {
         let mut input = part1_input();
         input.sort();
@@ -149,8 +149,6 @@ mod tests {
         let gc = GuardFinder::new(&input);
         assert_eq!(10*24, gc.sleepiest_guard());
     }
-
-
 
     #[test]
     fn guard_record_after_initialization() {
