@@ -24,6 +24,9 @@ fn main() {
     println!("Calculating part 1 answer ..");
     let gc = GuardFinder::new(&input);
     assert_eq!(19025, gc.sleepiest_guard());
+
+    println!("Calculating part 2 answer ..");
+    assert_eq!(23776, gc.sleepiest_guard_for_minute());
     println!("SUCCESS!!");
 
 }
