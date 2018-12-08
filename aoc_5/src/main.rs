@@ -10,6 +10,9 @@ fn main() {
 
     println!("Calculating part 1 answer ..");
     assert_eq!(9154, get_length_of_reduced(&polymer));
+    println!("Calculating part 2 answer (this takes a bit) ..");
+    assert_eq!(4556, get_length_of_shortest(&polymer));
+
     println!("SUCCESS!!");
 }
 
@@ -23,6 +26,18 @@ fn read_input() -> String {
 fn get_length_of_reduced(polymer: &String) -> usize {
     let reduced = reduce_polymer(&polymer);
     return reduced.len();
+}
+
+fn get_length_of_shortest(polymer: &String) -> usize {
+    let mut min_len = polymer.len();
+    for unit_as_byte in 'a' as u8 .. 'z' as u8 {
+        let unit = unit_as_byte as char;
+        let polymer_stripped = remove_unit(unit, &polymer);
+        let reduced = reduce_polymer(&polymer_stripped);
+        if reduced.len() < min_len { min_len = reduced.len(); }
+    }
+
+    return min_len;
 }
 
 fn reduce_polymer(polymer: &String) -> String {
@@ -59,6 +74,21 @@ fn is_reacting(c1: char, c2: char) -> bool {
     return c1 != c2 && (c1.to_ascii_lowercase() == c2 || c1.to_ascii_uppercase() == c2);
 }
 
+fn remove_unit(unit: char, polymer: &String) -> String {
+    let mut result = String::with_capacity(polymer.len());
+    let mut i = 0;
+    while i < polymer.len() {
+        let current_char = polymer.as_bytes()[i] as char;
+        if current_char.to_ascii_lowercase() != unit {
+            result.push(current_char)
+        }
+        i += 1;
+    }
+
+    return result;
+
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -78,6 +108,12 @@ mod tests {
         let polymer = String::from("dabAcCaCBAcCcaDA");
         assert_eq!("dabCBAcaDA", reduce_polymer(&polymer));
 
+     }
+
+     #[test]
+     fn remove_unit_() {
+        let polymer = String::from("dabAcCaCBAcCcaDA");
+        assert_eq!("dbcCCBcCcD", remove_unit('a', &polymer));
      }
 
     #[test]
