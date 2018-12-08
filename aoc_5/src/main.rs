@@ -7,15 +7,22 @@ fn main() {
 }
 
 fn react_polymer(polymer: &String) -> String {
-    let mut result = String::from("");
+    let result = String::from("");
 
-    // for (i, c) in polymer.char_indices() {
-    //     if i>0 && polymer.get(i-1).as_str().to_uppercase() == c.as_str() {
-    //         return result;
-    //     }
-    // }
+    for (i, c) in polymer.char_indices() {
+        if i>0 {
+            let prev_char = polymer.chars().nth(i-1).unwrap();
+            if is_reacting(prev_char, c) {
+                return result;
+            }
+        }
+    }
 
     return polymer.clone();
+}
+
+fn is_reacting(c1: char, c2: char) -> bool {
+    return c1 != c2 && (c1.to_ascii_lowercase() == c2 || c1.to_ascii_uppercase() == c2);
 }
 
 #[cfg(test)]
@@ -24,8 +31,10 @@ mod tests {
     #[test]
     fn single_step_reactions() {
         assert_eq!("abcd", react_polymer(&String::from("abcd")));
-        // assert_eq!("", react_polymer(&String::from("aA")));
-    }
+        assert_eq!("", react_polymer(&String::from("aA")));
+        assert_eq!("aa", react_polymer(&String::from("aa")));
+        assert_eq!("", react_polymer(&String::from("Aa")));
+     }
 
     #[test]
     fn indexing_strings() {
