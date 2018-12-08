@@ -15,22 +15,48 @@ fn main() {
 }
 
 pub struct GuardFinder<'a> {
-    _input : &'a Vec<String>
+    input : &'a Vec<String>
 
 }
 
 impl<'a> GuardFinder<'a> {
     pub fn new(input: &'a Vec<String>) -> GuardFinder<'a> {
-        return GuardFinder { _input: input};
+        return GuardFinder { input: input};
     }
 
-    pub fn sleepiest_guard(&self) -> i32 {
-        // for all input lines 
-        // is it a guard? -> Current guard is #xxx, create minutes hashmap for it
-        // falling asleep? note current minute
-        // waking up ? minutes asleep = minute - sleep minute
-        // increase minutes hashmap since last sleep minute
-        return 0;
+    pub fn sleepiest_guard(&self) -> i32 {        
+        let mut guard_records : Vec<GuardRecord> = Vec::new();
+        let mut current_guard_record = GuardRecord::new(-1);
+        let mut last_sleep_minute = -1;
+        for line in self.input {
+            let guard_id = parse_guard_from_entry(line);
+            if guard_id != -1 {
+                if current_guard_record.id != -1 {
+                    guard_records.push(current_guard_record);
+                }
+                current_guard_record = GuardRecord::new(guard_id);
+            }
+
+            if is_sleep_entry(line) {
+                last_sleep_minute = parse_minutes_from_entry(line);
+            }
+
+            if is_wakeup_entry(line) {
+                let wakeup_minute = parse_minutes_from_entry(line);
+                current_guard_record.was_asleep(last_sleep_minute, wakeup_minute);
+            }
+
+        }
+
+        let mut sleepiest_guard = GuardRecord::new(-1);
+        for guard_record in guard_records {
+            if guard_record.minutes_asleep() > sleepiest_guard.minutes_asleep() {
+                sleepiest_guard = guard_record;
+            }
+        }
+
+
+        return sleepiest_guard.id * sleepiest_guard.minute_most_asleep();
     }
 }
 
@@ -115,6 +141,17 @@ mod tests {
     use super::*;
 
     #[test]
+    fn find_sleepiest_guard() {
+        let mut input = part1_input();
+        input.sort();
+
+        let gc = GuardFinder::new(&input);
+        assert_eq!(10*24, gc.sleepiest_guard());
+    }
+
+
+
+    #[test]
     fn guard_record_after_initialization() {
         let gr1 = GuardRecord::new(1234);
         assert_eq!(1234, gr1.id);
@@ -180,16 +217,6 @@ mod tests {
         let mut input = part1_input();
         input.sort();
         assert_eq!(part1_input_chronological(), input);
-    }
-
-    #[test]
-    #[ignore]
-    fn part1() {
-        let mut input = part1_input();
-        input.sort();
-
-        let gc = GuardFinder::new(&input);
-        assert_eq!(10*24, gc.sleepiest_guard());
     }
 
     fn part1_input() -> Vec<String> {
