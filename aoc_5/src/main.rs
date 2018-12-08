@@ -71,7 +71,7 @@ fn react_polymer(polymer: &String) -> String {
 }
 
 fn is_reacting(c1: char, c2: char) -> bool {
-    return c1 != c2 && (c1.to_ascii_lowercase() == c2 || c1.to_ascii_uppercase() == c2);
+    return c1 != c2 && c1.to_ascii_lowercase() == c2.to_ascii_lowercase();
 }
 
 fn remove_unit(unit: char, polymer: &String) -> String {
@@ -86,7 +86,6 @@ fn remove_unit(unit: char, polymer: &String) -> String {
     }
 
     return result;
-
 }
 
 #[cfg(test)]
