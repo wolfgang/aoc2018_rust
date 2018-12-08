@@ -38,7 +38,7 @@ mod tests {
         assert_eq!("", react_polymer(&String::from("aA")));
         assert_eq!("aa", react_polymer(&String::from("aa")));
         assert_eq!("", react_polymer(&String::from("Aa")));
-        //assert_eq!("abcd", react_polymer(&String::from("abxXcd")));
+        assert_eq!("abcd", react_polymer(&String::from("abxXcd")));
 
      }
 
