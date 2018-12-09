@@ -23,8 +23,11 @@ impl Area {
     fn new(initial_coord: Coord) -> Area {
         Area {coordinates: vec![initial_coord]}
     }
-}
 
+    fn add_coordinate(&mut self, coord: Coord) {
+        self.coordinates.push(coord);
+    }
+}
 
 #[cfg(test)]
 mod tests {
@@ -41,5 +44,13 @@ mod tests {
     fn initialize_area() {
         let area = Area::new((1, 2));
         assert_eq!(vec![(1, 2)], area.coordinates);
+    }
+
+    #[test]
+    fn add_coords_to_area() {
+        let mut area = Area::new((3, 4));
+        area.add_coordinate((5, 6));
+        area.add_coordinate((7, 8));
+        assert_eq!(vec![(3, 4), (5, 6), (7, 8)], area.coordinates);
     }
 }
