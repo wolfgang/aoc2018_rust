@@ -34,6 +34,12 @@ impl Area {
     fn size(&self) -> usize {
         return self.coordinates.len();
     }
+
+    fn is_infinite(&self, max_x: i32, max_y: i32) -> bool {
+        let b = self.coordinates.iter().any(
+            |(x, y)| *x == 0 || *y == 0 || *x == max_x || *y == max_y);
+        return b;
+    }
 }
 
 struct AreaRegistry {
@@ -102,6 +108,35 @@ mod tests {
         area.add_coordinate((5, 6));
         area.add_coordinate((7, 8));
         assert_eq!(vec![(5, 6), (7, 8)], area.coordinates);
+    }
+
+    #[test]
+    fn area_is_infinite() {
+        let mut area1 = Area::new();
+        area1.add_coordinate((1, 1));
+        area1.add_coordinate((2, 2));
+        assert!(!area1.is_infinite(10, 10));
+
+        let mut area2 = Area::new();
+        area2.add_coordinate((0, 1));
+        area2.add_coordinate((2, 2));
+        assert!(area2.is_infinite(10, 10));
+
+        let mut area3 = Area::new();
+        area3.add_coordinate((1, 1));
+        area3.add_coordinate((2, 0));
+        assert!(area3.is_infinite(10, 10));
+
+        let mut area4 = Area::new();
+        area4.add_coordinate((1, 1));
+        area4.add_coordinate((10, 2 ));
+        assert!(area4.is_infinite(10, 10));
+
+        let mut area5 = Area::new();
+        area5.add_coordinate((1, 1));
+        area5.add_coordinate((1, 10 ));
+        assert!(area5.is_infinite(10, 10));
+
     }
 
     #[test]
