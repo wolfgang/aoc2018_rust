@@ -31,17 +31,16 @@ impl Area {
 }
 
 fn find_nearest_coordinates_of(x: i32, y: i32, coordinates: &Vec<Coord>) -> Vec<Coord> {
-    let mut all_nearest = Vec::new();
-
-    let mut min_distance = 99999;
+    let mut all_nearest : Vec<(u32, Coord)> = Vec::new();
+    let mut nearest_distance = 99999;
     for coord in coordinates {
-        if *coord!=(x, y) && md((x, y), *coord) < min_distance {
-            min_distance = md((x, y), *coord);
-            all_nearest.push(*coord);
+        if *coord!=(x, y) && md((x, y), *coord) <= nearest_distance {
+            nearest_distance = md((x, y), *coord);
+            all_nearest.push((nearest_distance, *coord));
         }
     }
 
-    return all_nearest;
+    return all_nearest.into_iter().filter(|(dist, _)| dist==&nearest_distance).map(|(_, coord)| coord).collect();
 }
 
 #[cfg(test)]
@@ -84,6 +83,11 @@ mod tests {
         let nearest = find_nearest_coordinates_of(2, 1, &coords);
         assert_eq!(1, nearest.len());
         assert_eq!((2, 2), nearest[0]);
+
+        let nearest = find_nearest_coordinates_of(2, 0, &coords);
+        assert_eq!(2, nearest.len());
+        assert_eq!((0, 0), nearest[0]);
+        assert_eq!((2, 2), nearest[1]);
     }
 
     #[test]
