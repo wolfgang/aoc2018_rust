@@ -17,7 +17,25 @@ fn main() {
     let coords = read_coords();
     println!("Calculating part 1 answer ..");
     assert_eq!(3660, find_largest_finite_area(&coords));
+
+
+    let (max_x, max_y) = find_max_x_y(&coords);    
+
+    let mut count = 0;
+    for y in 0 ..= max_y {
+        for x in 0 ..= max_x {
+            let total_distance = total_distance_from(x, y, &coords);
+            if (total_distance < 10000) { count += 1}
+        }
+    }
+
+    println!("{}", count);
+
+
+
     println!("SUCCESS!!");
+
+
 
 }
 
