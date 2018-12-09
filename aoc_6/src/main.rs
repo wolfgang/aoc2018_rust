@@ -2,12 +2,13 @@
 #[macro_use]
 extern crate pretty_assertions;
 
+type Coord = (i32, i32);
 
 fn main() {
     println!("Hello, world!");
 }
 
-fn md(c1 : (i32, i32), c2: (i32, i32)) -> u32 {
+fn md(c1 : Coord, c2: Coord) -> u32 {
     let (x1, y1) = c1;
     let (x2, y2) = c2;
 
@@ -15,11 +16,11 @@ fn md(c1 : (i32, i32), c2: (i32, i32)) -> u32 {
 }
 
 struct Area {
-    coordinates: Vec<(i32, i32)>
+    coordinates: Vec<Coord>
 }
 
 impl Area {
-    fn new(initial_coord: (i32, i32)) -> Area {
+    fn new(initial_coord: Coord) -> Area {
         Area {coordinates: vec![initial_coord]}
     }
 }
