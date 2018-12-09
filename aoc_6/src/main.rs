@@ -149,6 +149,15 @@ fn find_nearest_coordinates_of(x: i32, y: i32, coordinates: &Vec<Coord>) -> Vec<
                 .collect();
 }
 
+fn total_distance_from(x: i32, y: i32, coordinates: &Vec<Coord>) -> u32 {
+    let mut result = 0;
+    for coord in coordinates {
+        result += md((x, y), *coord);
+    }
+    return result;
+}
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -272,6 +281,15 @@ mod tests {
         assert_eq!(2, nearest.len());
         assert_eq!((0, 0), nearest[0]);
         assert_eq!((2, 2), nearest[1]);
+    }
+
+    #[test]
+    fn total_distance_from_() {
+        let coords = vec![(0, 0), (2, 0), (2, 2)];
+        assert_eq!(5, total_distance_from(1, 0, &coords));
+        assert_eq!(6, total_distance_from(1, 1, &coords));
+        assert_eq!(8, total_distance_from(0, 2, &coords));
+
     }
 
     #[test]
