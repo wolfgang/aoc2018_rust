@@ -42,15 +42,10 @@ fn read_coords() -> Vec<Coord> {
 fn find_largest_finite_area(coords: &Vec<Coord>, max_x: i32, max_y: i32) -> usize {
     let ar = build_areas(&coords, max_x, max_y);
 
-    let mut max_size = 0;
+    ar.areas.iter().fold(0, 
+        |max_size, (_, area)| 
+        if !area.is_infinite(max_x, max_y) && area.size() > max_size { area.size() } else { max_size } )
 
-    for (_, area) in ar.areas {
-        if !area.is_infinite(max_x, max_y) && area.size() > max_size {
-            max_size = area.size();
-        }
-    }
-
-    return max_size;
 }
 
 fn find_size_of_closest_region(coords: &Vec<Coord>, max_x: i32, max_y: i32) -> usize {
