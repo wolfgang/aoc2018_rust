@@ -4,6 +4,7 @@ extern crate pretty_assertions;
 extern crate regex;
 
 
+use std::cmp;
 use std::io::{BufReader};
 use std::io::prelude::*;
 use std::fs::File;
@@ -46,8 +47,7 @@ fn find_largest_finite_area(coords: &Vec<Coord>, max_x: i32, max_y: i32) -> usiz
         0, 
         |max_size, (_, area)| {
             if area.is_infinite(max_x, max_y) { return max_size; }
-            if area.size() > max_size { return area.size(); } 
-            max_size
+            cmp::max(max_size, area.size())
         })
 }
 
@@ -64,14 +64,9 @@ fn find_size_of_closest_region(coords: &Vec<Coord>, max_x: i32, max_y: i32) -> u
 }
 
 fn find_max_x_y(coords: &Vec<Coord>) -> (i32, i32) {
-    let mut max_x = 0;
-    let mut max_y = 0;
-    for (x, y) in coords {
-        if *x > max_x { max_x = *x; }
-        if *y > max_y { max_y = *y; }
-    }
-
-    return (max_x, max_y);
+    coords.iter().fold(
+        (0, 0), 
+        |(max_x, max_y), (x, y)| (cmp::max(max_x, *x), cmp::max(max_y, *y)))
 }
 
 
