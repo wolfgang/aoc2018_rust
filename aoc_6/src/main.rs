@@ -29,7 +29,7 @@ fn main() {
         }
     }
 
-    println!("{}", count);
+    assert_eq!(35928, count);
 
 
 
