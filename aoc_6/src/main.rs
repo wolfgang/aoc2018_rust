@@ -23,13 +23,30 @@ struct Area {
 }
 
 impl Area {
-    fn new(initial_coord: Coord) -> Area {
-        Area {coordinates: vec![initial_coord]}
+    fn new() -> Area {
+        Area {coordinates: Vec::new()}
     }
 
     fn add_coordinate(&mut self, coord: Coord) {
         self.coordinates.push(coord);
     }
+}
+
+struct AreaRegistry {
+    areas: HashMap<Coord, Area>
+}
+
+impl AreaRegistry {
+    fn new() -> AreaRegistry {
+        AreaRegistry { areas: HashMap::new() }
+    }
+
+    fn add_coord_to_area(&mut self, center: Coord, coord: Coord) {
+        let area = self.areas.entry(center).or_insert(Area::new());
+        area.add_coordinate(coord);
+    }
+
+
 }
 
 fn find_nearest_coordinates_of(x: i32, y: i32, coordinates: &Vec<Coord>) -> Vec<Coord> {
@@ -58,16 +75,34 @@ mod tests {
 
     #[test]
     fn initialize_area() {
-        let area = Area::new((1, 2));
-        assert_eq!(vec![(1, 2)], area.coordinates);
+        let area = Area::new();
+        assert_eq!(0, area.coordinates.len());
     }
 
     #[test]
     fn add_coords_to_area() {
-        let mut area = Area::new((3, 4));
+        let mut area = Area::new();
         area.add_coordinate((5, 6));
         area.add_coordinate((7, 8));
-        assert_eq!(vec![(3, 4), (5, 6), (7, 8)], area.coordinates);
+        assert_eq!(vec![(5, 6), (7, 8)], area.coordinates);
+    }
+
+    #[test]
+    fn initialize_area_registry() {
+        let ar = AreaRegistry::new();
+        assert_eq!(0, ar.areas.len());
+    }
+
+    #[test]
+    fn add_coord_to_area() {
+        let mut ar = AreaRegistry::new();
+        ar.add_coord_to_area((1, 2), (3, 4));
+        ar.add_coord_to_area((1, 2), (5, 6));
+        // assert_eq!(2, ar.areas.len());
+        let area = ar.areas.get(&(1, 2)).unwrap();
+        assert_eq!(vec![(3,4), (5, 6)], area.coordinates);
+
+
     }
 
     #[test] 
