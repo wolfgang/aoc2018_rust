@@ -15,27 +15,13 @@ type Coord = (i32, i32);
 
 fn main() {
     let coords = read_coords();
-    println!("Calculating part 1 answer ..");
-    assert_eq!(3660, find_largest_finite_area(&coords));
-
-
     let (max_x, max_y) = find_max_x_y(&coords);    
-
-    let mut count = 0;
-    for y in 0 ..= max_y {
-        for x in 0 ..= max_x {
-            let total_distance = total_distance_from(x, y, &coords);
-            if (total_distance < 10000) { count += 1}
-        }
-    }
-
-    assert_eq!(35928, count);
-
-
+    println!("Calculating part 1 answer ..");
+    assert_eq!(3660, find_largest_finite_area(&coords, max_x, max_y));
+    println!("Calculating part 2 answer ..");
+    assert_eq!(35928, find_size_of_closest_region(&coords, max_x, max_y));
 
     println!("SUCCESS!!");
-
-
 
 }
 
@@ -53,8 +39,7 @@ fn read_coords() -> Vec<Coord> {
     return input;
 }
 
-fn find_largest_finite_area(coords: &Vec<Coord>) -> usize {
-    let (max_x, max_y) = find_max_x_y(coords);
+fn find_largest_finite_area(coords: &Vec<Coord>, max_x: i32, max_y: i32) -> usize {
     let ar = build_areas(&coords, max_x, max_y);
 
     let mut max_size = 0;
@@ -66,6 +51,18 @@ fn find_largest_finite_area(coords: &Vec<Coord>) -> usize {
     }
 
     return max_size;
+}
+
+fn find_size_of_closest_region(coords: &Vec<Coord>, max_x: i32, max_y: i32) -> usize {
+    let mut count = 0;
+    for y in 0 ..= max_y {
+        for x in 0 ..= max_x {
+            let total_distance = total_distance_from(x, y, &coords);
+            if total_distance < 10000 { count += 1}
+        }
+    }
+
+    return count;
 }
 
 fn find_max_x_y(coords: &Vec<Coord>) -> (i32, i32) {
