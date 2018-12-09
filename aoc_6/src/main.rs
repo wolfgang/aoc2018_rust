@@ -70,7 +70,6 @@ mod tests {
     }
 
     #[test] 
-    #[ignore]
     fn find_nearest_coordinates_of_a_point() {
         let coords = vec![(0, 0), (2, 2)];
 
