@@ -1,13 +1,25 @@
 #[cfg(test)]
 #[macro_use]
 extern crate pretty_assertions;
+extern crate regex;
+
 
 use std::collections::HashMap;
+use regex::Regex;
 
 type Coord = (i32, i32);
 
 fn main() {
     panic!("No solutions provided");
+}
+
+fn parse_coords(s: &String) -> Coord {
+    let re = Regex::new(r"(\d+),\s(\d+)").unwrap();
+    let caps = re.captures(s).unwrap();
+    let x = caps[1].parse::<i32>().unwrap();
+    let y = caps[2].parse::<i32>().unwrap();
+
+    return (x, y)
 }
 
 fn md(c1 : Coord, c2: Coord) -> u32 {
@@ -88,6 +100,14 @@ fn find_nearest_coordinates_of(x: i32, y: i32, coordinates: &Vec<Coord>) -> Vec<
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn parse_coords_()  {
+        assert_eq!((257, 332), parse_coords(&String::from("257, 332")));
+        assert_eq!((1, 2), parse_coords(&String::from("1, 2")));
+        assert_eq!((100, 2), parse_coords(&String::from("100, 2")));
+        assert_eq!((1, 200), parse_coords(&String::from("1, 200")));
+    }
 
     #[test]
     fn manhatten_distance() {
