@@ -143,7 +143,10 @@ fn find_nearest_coordinates_of(x: i32, y: i32, coordinates: &Vec<Coord>) -> Vec<
         }
     }
 
-    return all_nearest.into_iter().filter(|(dist, _)| dist==&nearest_distance).map(|(_, coord)| coord).collect();
+    return all_nearest.into_iter()
+                .filter(|(dist, _)| dist==&nearest_distance)
+                .map(|(_, coord)| coord)
+                .collect();
 }
 
 #[cfg(test)]
@@ -243,9 +246,7 @@ mod tests {
         assert!(area22.coordinates.contains(&(1, 2)));
         assert!(area22.coordinates.contains(&(2, 1)));
         assert!(area22.coordinates.contains(&(2, 2)));
-
     }
-
 
     #[test] 
     fn find_nearest_coordinates_of_a_point() {
