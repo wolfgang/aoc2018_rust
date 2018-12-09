@@ -92,6 +92,18 @@ mod tests {
         let result : Vec<i32> = vec![1, 2, 3].into_iter().map(|x| x*2).collect();
         assert_eq!(vec![2, 4, 6], result);
     }
+
+    #[test]
+    fn filter_and_map_vector() {
+        let v = vec![(5, "coord1"), (3, "coord2"), (3, "coord3")];
+        let min = 3;
+        let result : Vec<&str> =v.into_iter()
+            .filter(|(x, _)| x<=&min)
+            .map(|(_, s)| s)
+            .collect();
+        assert_eq!(vec!["coord2", "coord3"], result);
+
+    }
 }
 
 
