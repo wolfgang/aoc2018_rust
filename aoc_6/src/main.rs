@@ -30,6 +30,19 @@ impl Area {
     }
 }
 
+fn find_nearest_coordinates_of(x: i32, y: i32, coordinates: &Vec<Coord>) -> Vec<Coord> {
+    let mut all_nearest = Vec::new();
+
+    let mut min_distance = 99999;
+    for coord in coordinates {
+        if *coord!=(x, y) && md((x, y), *coord) < min_distance {
+            min_distance = md((x, y), *coord);
+            all_nearest.push(*coord);
+        }
+    }
+
+    return all_nearest;
+}
 
 #[cfg(test)]
 mod tests {
@@ -56,4 +69,37 @@ mod tests {
         assert_eq!(vec![(3, 4), (5, 6), (7, 8)], area.coordinates);
     }
 
+    #[test] 
+    #[ignore]
+    fn find_nearest_coordinates_of_a_point() {
+        let coords = vec![(0, 0), (2, 2)];
+
+        let nearest = find_nearest_coordinates_of(1, 0, &coords);
+        assert_eq!(1, nearest.len());
+        assert_eq!((0, 0), nearest[0]);
+
+        let nearest = find_nearest_coordinates_of(0, 1, &coords);
+        assert_eq!(1, nearest.len());
+        assert_eq!((0, 0), nearest[0]);
+
+        let nearest = find_nearest_coordinates_of(2, 1, &coords);
+        assert_eq!(1, nearest.len());
+        assert_eq!((2, 2), nearest[0]);
+    }
+
+    #[test]
+    fn map_over_vector() {
+        let result : Vec<i32> = vec![1, 2, 3].into_iter().map(|x| x*2).collect();
+        assert_eq!(vec![2, 4, 6], result);
+    }
 }
+
+
+
+
+
+
+
+
+
+
