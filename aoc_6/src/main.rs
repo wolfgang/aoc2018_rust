@@ -30,6 +30,10 @@ impl Area {
     fn add_coordinate(&mut self, coord: Coord) {
         self.coordinates.push(coord);
     }
+
+    fn size(&self) -> usize {
+        return self.coordinates.len();
+    }
 }
 
 struct AreaRegistry {
@@ -45,8 +49,21 @@ impl AreaRegistry {
         let area = self.areas.entry(center).or_insert(Area::new());
         area.add_coordinate(coord);
     }
+}
 
+fn build_areas(coords: &Vec<Coord>, max_x: i32, max_y: i32) -> AreaRegistry {
+    let mut ar = AreaRegistry::new();
 
+    for y in 0 ..= max_y {
+        for x in 0 ..= max_x {
+            let nearest = find_nearest_coordinates_of(x, y, coords);
+            if nearest.len()==1 {
+                ar.add_coord_to_area(nearest[0], (x, y))
+            }
+        }
+    }
+
+    return ar;
 }
 
 fn find_nearest_coordinates_of(x: i32, y: i32, coordinates: &Vec<Coord>) -> Vec<Coord> {
@@ -98,12 +115,33 @@ mod tests {
         let mut ar = AreaRegistry::new();
         ar.add_coord_to_area((1, 2), (3, 4));
         ar.add_coord_to_area((1, 2), (5, 6));
-        // assert_eq!(2, ar.areas.len());
+        assert_eq!(1, ar.areas.len());
         let area = ar.areas.get(&(1, 2)).unwrap();
         assert_eq!(vec![(3,4), (5, 6)], area.coordinates);
+    }
 
+    #[test]
+    fn build_areas_() {
+        let coords = vec![(0, 0), (2, 2)];
+        let ar = build_areas(&coords, 2, 2);
+
+        assert_eq!(2, ar.areas.keys().len());
+        assert!(ar.areas.contains_key(&(0, 0)));
+        assert!(ar.areas.contains_key(&(2, 2)));
+        let area00 = ar.areas.get(&(0, 0)).unwrap();
+        assert_eq!(3, area00.size());
+        assert!(area00.coordinates.contains(&(0, 0)));
+        assert!(area00.coordinates.contains(&(1, 0)));
+        assert!(area00.coordinates.contains(&(0, 1)));
+
+        let area22 = ar.areas.get(&(2, 2)).unwrap();
+        assert_eq!(3, area00.size());
+        assert!(area22.coordinates.contains(&(1, 2)));
+        assert!(area22.coordinates.contains(&(2, 1)));
+        assert!(area22.coordinates.contains(&(2, 2)));
 
     }
+
 
     #[test] 
     fn find_nearest_coordinates_of_a_point() {
