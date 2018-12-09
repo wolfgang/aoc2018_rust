@@ -4,14 +4,63 @@ extern crate pretty_assertions;
 extern crate regex;
 
 
+use std::io::{BufReader};
+use std::io::prelude::*;
+use std::fs::File;
 use std::collections::HashMap;
 use regex::Regex;
 
 type Coord = (i32, i32);
 
+
 fn main() {
-    panic!("No solutions provided");
+    let coords = read_coords();
+    println!("Calculating part 1 answer ..");
+    assert_eq!(3660, find_largest_finite_area(&coords));
+    println!("SUCCESS!!");
+
 }
+
+fn read_coords() -> Vec<Coord> {
+    let mut input = vec![];
+
+    let f = File::open("input.txt").expect("Failed to open input.txt");
+    let f = BufReader::new(f);
+
+    for line in f.lines() {
+        let line = line.unwrap();
+        input.push(parse_coords(&line));
+    }
+
+    return input;
+}
+
+fn find_largest_finite_area(coords: &Vec<Coord>) -> usize {
+    let (max_x, max_y) = find_max_x_y(coords);
+    let ar = build_areas(&coords, max_x, max_y);
+
+    let mut max_size = 0;
+
+    for (_, area) in ar.areas {
+        if !area.is_infinite(max_x, max_y) && area.size() > max_size {
+            max_size = area.size();
+        }
+    }
+
+    return max_size;
+}
+
+fn find_max_x_y(coords: &Vec<Coord>) -> (i32, i32) {
+    let mut max_x = 0;
+    let mut max_y = 0;
+    for (x, y) in coords {
+        if *x > max_x { max_x = *x; }
+        if *y > max_y { max_y = *y; }
+    }
+
+    return (max_x, max_y);
+}
+
 
 fn parse_coords(s: &String) -> Coord {
     let re = Regex::new(r"(\d+),\s(\d+)").unwrap();
