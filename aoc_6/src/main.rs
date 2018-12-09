@@ -110,9 +110,7 @@ impl Area {
     }
 
     fn is_infinite(&self, max_x: i32, max_y: i32) -> bool {
-        let b = self.coordinates.iter().any(
-            |(x, y)| *x == 0 || *y == 0 || *x == max_x || *y == max_y);
-        return b;
+        self.coordinates.iter().any(|(x, y)| *x == 0 || *y == 0 || *x == max_x || *y == max_y)
     }
 }
 
