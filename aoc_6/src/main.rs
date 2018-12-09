@@ -165,11 +165,7 @@ fn find_nearest_coordinates_of(x: i32, y: i32, coordinates: &Vec<Coord>) -> Vec<
 }
 
 fn total_distance_from(x: i32, y: i32, coordinates: &Vec<Coord>) -> u32 {
-    let mut result = 0;
-    for coord in coordinates {
-        result += md((x, y), *coord);
-    }
-    return result;
+    coordinates.iter().fold(0, |acc, coord| acc + md((x, y), *coord))
 }
 
 
